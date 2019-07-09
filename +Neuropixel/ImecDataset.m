@@ -1281,10 +1281,24 @@ end
             file = [f, e];
 
 
-            match = regexp(file, '(?<stem>\w+).imec.(?<type>\w+).bin', 'names', 'once');
+            %making a small change to make system compatible with movshon
+            %lab data format. Making sure to include files with a #
+            
+            if contains(file,'#')
+                
+                match = regexp(file,'(?<stem>\w+)#(?<stem2>\w+).imec.(?<type>\w+).bin','names','once');
+            else
+                match = regexp(file, '(?<stem>\w+).imec.(?<type>\w+).bin', 'names', 'once');
+            end
             if ~isempty(match)
-                type = match.type;
-                fileStem = match.stem;
+                if contains(file,'#')
+                    type = match.type;
+                    fileStem = [match.stem '#' match.stem2];
+                else
+                    
+                    type = match.type;
+                    fileStem = match.stem;
+                end
                 return;
             end
 
